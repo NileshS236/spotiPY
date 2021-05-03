@@ -44,10 +44,13 @@
     let albums = []
     let artists = []
     let tracks = []
+
     document.querySelector(".artist-h1").style.display = "none"
     document.querySelector(".track-h1").style.display = "none"
+
     const fetchSearch = async (e) => {
         e.preventDefault();
+
         artists = []
         albums = []
         tracks = []
@@ -57,8 +60,9 @@
         document.querySelector(".album").innerHTML = ""
         document.querySelector(".artist").innerHTML = ""
         document.querySelector(".track").innerHTML = ""
-        
+
         document.querySelector(".dashboard").innerHTML += "{% include 'spinner.html' %}"
+
         let interval = setInterval(() => {
             document.querySelector(".dashboard").removeChild(document.querySelector('.spinner'))
         }, 10000)
@@ -72,7 +76,6 @@
             document.querySelector(".dashboard").removeChild(document.querySelector('.spinner'))
             clearInterval(interval)
         }
-
 
         albums = data.album
         artists = data.artists
