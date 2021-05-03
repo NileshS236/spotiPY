@@ -1,0 +1,55 @@
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: linear-gradient(transparent, #000);
+  background-color: #5b5773;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  min-width: 800px;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+/* Change the white to any color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0 50px rgba(2, 88, 145) inset !important;
+  -webkit-box-shadow: 0 0 0 50px rgba(2, 88, 145) inset !important;
+  -webkit-text-fill-color: white;
+}
+
+a {
+  text-decoration: none;
+}
+
+audio {
+  width: 100%;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #181818;
+}
+
+audio::-webkit-media-controls-mute-button {
+  background-color: white;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+audio::-webkit-media-controls-play-button {
+  background-color: white;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+audio::-webkit-media-controls-current-time-display {
+  text-shadow: none;
+  color: white;
+}
+
+audio::-webkit-media-controls-time-remaining-display {
+  text-shadow: none;
+  color: white;
+}

@@ -1,0 +1,113 @@
+.bg-wrapper {
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-form-div {
+  position: absolute;
+  height: 100vh;
+  /* width: 100vw; */
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: slidein 0.5s linear forwards;
+}
+
+@keyframes slidein {
+  0% {
+    transform: translateY(-75%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+}
+
+.login-form {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 30px;
+  box-shadow: 10px 20px 40px rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background-color: rgba(2, 88, 145, 0.8);
+  border: white;
+  -webkit-box-reflect: below 10px
+    linear-gradient(transparent, transparent, rgba(255, 255, 255, 0.2));
+}
+
+.login-form > div > label {
+  position: absolute;
+  top: 10px;
+  left: 6px;
+  font-size: 15px;
+  font-family: Arial;
+  font-weight: 500;
+  transition: 0.2s ease-in-out;
+  z-index: -1;
+  color: rgba(255, 255, 255, 0.5);
+  /* padding: 5px; */
+}
+
+.input-box {
+  position: relative;
+}
+
+.login-form > div > input {
+  margin-bottom: 20px;
+  padding: 3px 5px;
+  height: 30px;
+  width: 300px;
+  border: none;
+  border-bottom: 1px solid white;
+  color: white;
+  font-weight: 500;
+  font-size: 17px;
+  outline: none;
+  background: transparent;
+  letter-spacing: 1px;
+}
+
+.login-form > div > input:valid ~ label,
+.login-form > div > input:focus ~ label {
+  font-size: 10px;
+  transform: translate(-5px, -20px);
+}
+
+.login-form > button {
+  height: 40px;
+  width: 150px;
+  font-size: 17px;
+  color: white;
+  outline: none;
+  border: 1px solid white;
+  margin-top: 30px;
+  cursor: pointer;
+  background: transparent;
+  letter-spacing: 1px;
+}
+
+.login-form > button:hover > span {
+  transition: 0.3s ease-in-out;
+  margin-left: 5px;
+}
+
+.login-form > button:hover {
+  color: white;
+}
+
+.login-form > button:focus {
+  box-shadow: 2px 5px 40px rgba(0, 0, 0, 0.2);
+}

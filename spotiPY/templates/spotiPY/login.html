@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Login
+{% endblock title %}
+
+{% block csslinks %}<link rel='stylesheet' href={% static 'css/login.css' %}>{% endblock csslinks %}
+
+{% block content %}
+    {% if login_form %}
+    <div class="bg-wrapper" style="background-image: url('{% static 'images/bg.gif' %}')">
+        <div class="login-form-div">
+            <form class='login-form' method='POST'>
+                {% csrf_token %}
+                <div class="input-box">
+                    <input type='email' name='email', id='inputEmail' class='email-field' required autofocus>
+                    <label class="email-placeholder">Email Address</label>
+                </div>
+                <div class="input-box">
+                    <input type='password' name='password', id='inputPassword' class='password-field' required>
+                    <label class="pasword-placeholder">Password</label>
+                </div>
+                <button class='login-button' type="submit">Login <span>&#8594;<span></button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up{% endblock title %}
+{% block csslinks %}<link rel="stylesheet" href="{% static 'css/signup.css' %}">{% endblock csslinks %}
+{% block content %}
+{% if signup_form %}
+<div class="bg-wrapper" style="background-image: url('{% static 'images/bg.gif' %}')">
+    <div class="signup-form-div">
+        <form method='POST' class="signup-form">
+            {% csrf_token %}
+            <div class="input-box">
+                <input type="email" name="email" id="inputEmail" class="email-field" required autofocus>
+                <label class="email-placeholder">Email Address</label>
+            </div>
+            <div class="input-box">
+                <input type="text" name="username", id="inputUsername" class="username-field" required>
+                <label class="username-placeholder">Username</label>
+            </div>
+            <div class="input-box">
+                <input type="password" name="password1" id="inputPassword1" class="password-field" required>
+                <label class="password1-placeholder">Password</label>
+            </div>
+            <div class="input-box">
+                <input type="password" name="password2" id="inputPassword2" class="password-field" required>
+                <label class="password2-placeholder">Confirm Password</label>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

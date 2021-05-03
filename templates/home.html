@@ -1,0 +1,208 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block csslinks %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock csslinks %}
+{% block content %}
+<div class="home">
+    <div class="search-form-wrapper">
+        <div class="style-div">
+            <form method='GET' class="search-form">
+                {% csrf_token %}
+                <img src="{% static 'images/search.png' %}" class="search-icon">
+                <input type="text" class="search-text" placeholder="Artists" required autofocus>
+            </form>
+            <button class='cancel-button' onclick="clearQuery()"><img src="{% static 'images/cancel.png' %}" class='cancel-button'></button>
+        </div>
+        <div class="avatar">
+            <div class="tag" onclick="logout()">
+                <img class="avatar-img" src="{% static 'images/avatar.png' %}">
+                <p>{{user.username}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard">
+        <div class="album"></div>
+        <h1 class="artist-h1">Artists</h1>
+        <div class="artist"></div>
+        <h1 class="track-h1">Tracks</h1>
+        <div class="track"></div>
+    </div>
+    <div class="complete-playlist-container">
+        <button class='exit-button' onclick="exitFullPlaylist()"><img src="{% static 'images/exit.png' %}"></button>
+        <div class="complete-playlist"></div>
+    </div>
+    <div class="footer">
+        <audio class="audio-player" id="player" controls>
+            <source type="audio/mp3">
+        </audio>
+    </div>
+{% endblock content %}
+{% block scripts %}
+<script>
+    let albums = []
+    let artists = []
+    let tracks = []
+    document.querySelector(".artist-h1").style.display = "none"
+    document.querySelector(".track-h1").style.display = "none"
+    const fetchSearch = async (e) => {
+        e.preventDefault();
+        artists = []
+        albums = []
+        tracks = []
+        document.querySelector(".dashboard").innerHTML += "{% include 'spinner.html' %}"
+        let interval = setInterval(() => {
+            document.querySelector(".dashboard").removeChild(document.querySelector('.spinner'))
+        }, 10000)
+        
+        let q = document.querySelector(".search-text").value;
+        let url = "{% url 'spotiPY:search' query='search_query' %}".replace("search_query", q)
+        let response = await fetch(url);
+        data = await response.json()
+
+        if (response) {
+            document.querySelector(".dashboard").removeChild(document.querySelector('.spinner'))
+            clearInterval(interval)
+        }
+
+
+        albums = data.album
+        artists = data.artists
+        tracks = data.tracks
+        
+        document.querySelector(".artist-h1").style.display = "none"
+        document.querySelector(".track-h1").style.display = "none"
+        document.querySelector(".album").innerHTML = ""
+        document.querySelector(".artist").innerHTML = ""
+        document.querySelector(".track").innerHTML = ""
+
+        if (albums && albums.length > 0) {
+            for (let album of albums) {
+                document.querySelector(".album").innerHTML += `<a class="album-card" href="${album.url}" target="_blank">
+                        <img src="${album.image_url}">
+                        <h3>${album.name}</h3>
+                        <p>${album.artists}</p>
+                    </a>`
+            }
+        }
+
+        if (artists && artists.length > 0) {
+            document.querySelector(".artist-h1").style.display = "block"
+            for (let artist of artists) {
+                document.querySelector(".artist").innerHTML += `<a class="artist-card" href="${artist.url}" target="_blank">
+                    <img src="${artist.image_url != 'no-image' ? artist.image_url : "{% static 'images/artist.png' %}"}">
+                    <div class="artist-info">
+                        <h4>${artist.name}</h4>
+                        <div>
+                            <p>${artist.followers} Followers</p>
+                            <p>${artist.popularity}%</p>
+                        </div>
+                    </div>
+                </a>`
+            }
+        }
+
+        if (tracks && tracks.length > 0){
+            document.querySelector(".track-h1").style.display = "block"
+            let i = 0
+            for (let track of tracks) {
+                for (let t of track) {
+                    document.querySelector(".track").innerHTML += `
+                                            <div class="track-card" data-pos="${i}" onclick="viewFullPlaylist(this)">
+                                                <div class="track-image">
+                                                    <img src="${t.image_url != 'no-image' ? t.image_url : "{% static 'images/artist.png' %}"}">
+                                                </div>
+                                                <div class="track-info">
+                                                    <h3>${t.track}</h3>
+                                                    <p>${t.artists}</p>
+                                                    <p>${t.release_date}<p>
+                                                </div>
+                                                <div class="full-track-view">
+                                                    <img src="{% static 'images/playlist.png' %}">
+                                                </div>
+                                            </div>`;
+                    i = i + 1
+                    break 
+                }
+            }
+        }
+    }
+
+    const playPauseSong = (e) => {
+        if (e.getAttribute('data-playing') == "true") {
+            document.querySelector(".footer").innerHTML = `
+            <div class="song"> 
+                <div class="song-cover">
+                    <img class="song-cover-image" src="{% static 'images/artist.png' %}">
+                </div>
+                <div class="song-info">
+                    <h4 class="song-name">Some random song name</h4>
+                    <p class="song-artists">All the artists of the song</p> 
+                </div>
+            </div>
+            <audio class="audio-player" id="player" controls>
+                <source type="audio/mp3">
+            </audio>`
+            document.querySelector('source').setAttribute('src', e.getAttribute('data-url'))
+            document.querySelector('.song-cover-image').setAttribute('src', e.getAttribute('data-image'))
+            document.querySelector(".song-name").innerText = e.getAttribute('data-name')
+            document.querySelector(".song-artists").innerText = e.getAttribute('data-artists')
+            document.getElementById('player').load()
+            document.getElementById('player').play()
+            for (let button of document.querySelectorAll(".play-pause-button")) {
+                button.setAttribute("src", "{% static 'images/play.png' %}")
+                button.setAttribute("data-playing", "true")
+            }
+            e.setAttribute("src", "{% static 'images/pause.png' %}")
+            e.setAttribute("data-playing", "false")
+        } else {
+            e.setAttribute("src", "{% static 'images/play.png' %}")
+            document.getElementById('player').pause()
+            e.setAttribute("data-playing", "true")
+        }
+    }
+
+    const viewFullPlaylist = (e) => {
+        completePlaylistContainer = document.querySelector(".complete-playlist-container")
+        completePlaylist = document.querySelector(".complete-playlist")
+        completePlaylistContainer.style.display = "block"
+        completePlaylistContainer.style.top = "0"
+        for (let t of tracks[Number(e.getAttribute('data-pos'))]) {
+            completePlaylist.innerHTML += `<div class="track-card">
+                                                <div class="track-image">
+                                                    <img src="${t.image_url != 'no-image' ? t.image_url : "{% static 'images/artist.png' %}"}">
+                                                    <img class="play-pause-button" onclick="playPauseSong(this)" data-playing="true" data-url="${t.preview_url}" data-image="${t.image_url != 'no-image' ? t.image_url : "{% static 'images/artist.png' %}"}" data-name="${t.track}" data-artists="${t.artists}" src="{% static 'images/play.png' %}">
+                                                </div>
+                                                <div class="track-info">
+                                                    <h3>${t.track}</h3>
+                                                    <p>${t.artists}</p>
+                                                </div>
+                                                    <p>${t.release_date}<p>
+                                            </div>`
+        }
+    }
+
+    const exitFullPlaylist = () => {
+        completePlaylistContainer = document.querySelector(".complete-playlist-container")
+        completePlaylist = document.querySelector(".complete-playlist")
+        completePlaylist.innerHTML = ""
+        completePlaylistContainer.style.display = "none"
+        completePlaylistContainer.style.top = "100%"
+    }
+
+    document.querySelector(".search-form").addEventListener('submit', e => fetchSearch(e));
+
+    const clearQuery = () => {
+        document.querySelector(".search-text").value = ""
+    }
+
+    const logout = () => {
+        let url = "{% url 'spotiPY:logout' %}"
+        fetch(url)
+        .then(data => {
+            window.location.replace(data.url)
+        })
+    }
+</script>
+{% endblock scripts %}
