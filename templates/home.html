@@ -51,6 +51,13 @@
         artists = []
         albums = []
         tracks = []
+        
+        document.querySelector(".artist-h1").style.display = "none"
+        document.querySelector(".track-h1").style.display = "none"
+        document.querySelector(".album").innerHTML = ""
+        document.querySelector(".artist").innerHTML = ""
+        document.querySelector(".track").innerHTML = ""
+        
         document.querySelector(".dashboard").innerHTML += "{% include 'spinner.html' %}"
         let interval = setInterval(() => {
             document.querySelector(".dashboard").removeChild(document.querySelector('.spinner'))
@@ -70,12 +77,6 @@
         albums = data.album
         artists = data.artists
         tracks = data.tracks
-        
-        document.querySelector(".artist-h1").style.display = "none"
-        document.querySelector(".track-h1").style.display = "none"
-        document.querySelector(".album").innerHTML = ""
-        document.querySelector(".artist").innerHTML = ""
-        document.querySelector(".track").innerHTML = ""
 
         if (albums && albums.length > 0) {
             for (let album of albums) {
