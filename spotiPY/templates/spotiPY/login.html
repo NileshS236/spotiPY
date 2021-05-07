@@ -9,7 +9,7 @@ Login
 
 {% block content %}
     {% if login_form %}
-    <div class="bg-wrapper" style="background-image: url('{% static 'images/bg.gif' %}')">
+    <div class="bg-wrapper" style="background-image: url('{% static 'images/bg.png' %}')">
         <div class="login-form-div">
             <form class='login-form' method='POST'>
                 {% csrf_token %}
@@ -22,6 +22,7 @@ Login
                     <label class="pasword-placeholder">Password</label>
                 </div>
                 <button class='login-button' type="submit">Login <span>&#8594;<span></button>
+                <a class="anchor" href="{% url 'spotiPY:signup' %}"><p>SignUp Instead</p></a>
             </form>
         </div>
     </div>
