@@ -15,7 +15,7 @@ import datetime
 import requests
 import pytz
 import json
-from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
 from urllib.parse import urlencode
 
 
